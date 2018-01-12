@@ -1,4 +1,5 @@
 # smartcollection
+
 Set of java collections which are not offered by JDK out of the box. The collections are unconventional and some of them are live in nature; meaning they engage CPU even when applications are not operating with them.
 
 ## AgeQueue
