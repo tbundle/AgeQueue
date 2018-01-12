@@ -1,7 +1,6 @@
 package org.abs.aq;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.abs.hl.HashList;
 
 /**
  * {@link AgeQueue} is made of {@code TimeSlice}s. So if an {@link AgeQueue} has
@@ -18,25 +17,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TimeSlice<OBJECT> {
 	private long startTime;
-	private int counter = 0;
-	/**
-	 * Use of {@link ConcurrentHashMap} is not a good idea here; however we
-	 * don't have a suitable data structure offered by Java at this point (Until
-	 * I write HashList :))
-	 */
-	private Map<Integer, OBJECT> store;
+	private HashList<OBJECT> store;
 
 	public TimeSlice() {
 		this.startTime = System.currentTimeMillis();
-		this.counter = 0;
-		this.store = new ConcurrentHashMap<>();
+		this.store = new HashList<>();
 	}
 
-	public OBJECT add(OBJECT o) {
-		return this.store.put(counter++, o);
+	public boolean add(OBJECT o) {
+		return this.store.add(o);
 	}
-	
-	public int size(){
+
+	public boolean remove(OBJECT o) {
+		return this.store.remove(o);
+	}
+
+	public int size() {
 		return this.store.size();
 	}
 

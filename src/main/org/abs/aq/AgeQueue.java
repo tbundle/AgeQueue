@@ -42,8 +42,6 @@ public class AgeQueue<OBJECT> implements Queue<OBJECT> {
 	private ReadWriteLock lock;
 
 	public AgeQueue(LinkedList<TimeSlice<OBJECT>> shaft, Duration life, DeathHandler<OBJECT> deathHandler) {
-		super();
-
 		this.shaft = shaft;
 		this.life = life;
 		this.deathHandler = deathHandler;

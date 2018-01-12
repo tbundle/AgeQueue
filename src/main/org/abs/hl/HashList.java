@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 /**
  * A list which uses hash map like structure to store elements; however, unlike
@@ -16,21 +15,20 @@ import java.util.logging.Logger;
  *
  */
 public class HashList<E> implements List<E> {
-	private static final Logger LOGGER = Logger.getLogger(HashList.class.getSimpleName());
+	private static final int INITIAL_BIN_COUNT = 1 << 5;
 
-	private static final int INITIAL_BIN_COUNT = 20;
+	private Node<E>[] bins;
+	private int size;
 
-	private Node<?>[] bins;
-	private long size;
-
+	@SuppressWarnings("unchecked")
 	public HashList() {
-		this.bins = new Node[INITIAL_BIN_COUNT];
+		this.bins = (Node<E>[]) new Node[INITIAL_BIN_COUNT];
 		this.size = 0;
 	}
 
 	@Override
 	public int size() {
-		return this.size();
+		return this.size;
 	}
 
 	@Override
@@ -63,21 +61,52 @@ public class HashList<E> implements List<E> {
 
 	@Override
 	public boolean add(E e) {
-		int i = e.hashCode() & this.bins.length;
+		int i = e.hashCode() & (this.bins.length - 1);
 
 		if (this.bins[i] == null) {
 			this.bins[i] = new Node<>(e);
 
 		} else {
-			
+			Node<E> node = this.bins[i];
+
+			while (node.next != null) {
+				node = node.next;
+			}
+
+			node.next = new Node<E>(e);
 		}
+
+		this.size++;
 
 		return true;
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
+		int i = o.hashCode() & (this.bins.length - 1);
+
+		if (this.bins[i] == null) {
+			return false;
+		}
+
+		Node<E> prev = null, curr = this.bins[i];
+
+		do {
+			if (curr.getVal() == o || curr.getVal().equals(o)) {
+				if (prev == null) {
+					this.bins[i] = curr.next;
+				} else {
+					prev.next = curr.next;
+				}
+
+				this.size--;
+
+			} else {
+				prev = curr;
+			}
+
+		} while ((curr = curr.next) != null);
+
 		return false;
 	}
 
@@ -191,13 +220,6 @@ public class HashList<E> implements List<E> {
 		public void setNext(Node<E> next) {
 			this.next = next;
 		}
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(Integer.toBinaryString(2));
-		System.out.println(Integer.toBinaryString(-2));
-		System.out.println(Integer.toBinaryString(-2 >>> 16));
-		
 	}
 
 }
