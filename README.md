@@ -6,4 +6,4 @@ A `java.util.Queue` implementation which automatically flushes an object out whe
 
 This is similar to mechanism which is implemented by in-memory caching solutions; however those mechanisms are bulky and are designed to work with cache data stores which are much larger than a collection and more often than not it involves locking the data store and scanning it periodically.
 
-AgeQueue implementation is thread-safe; yet it does not locks down the datastore at any given point.
+AgeQueue implementation is **thread-safe; yet it does not locks down the datastore at any given point.**
