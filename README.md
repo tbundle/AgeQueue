@@ -21,3 +21,13 @@ Currently AgeQueue supports a constant life  duration for all the objects (in fu
 
 #### TimeSlice
 As stated above, the complete QueueLife is divided into TimeSlices. The Timeslice is the smallest unit of the time that queue can record and work with. Currently, the TimeSlice can not be smaller than a second.
+
+
+
+
+## HashList
+A `java.util.List` implementation which mixes the benifit of both `java.util.ArrayList` and `java.util.LinkedList` along with map like searching capability.
+
+The list stores objects in a typical LinkedList fashion which allows easy addition and deletion. Additionaly, the list maintaines pointers at various places through the list which are calculated based on the hascode of the object allowing faster object search through the list.
+
+HashList implementation is NOT thread-safe.
