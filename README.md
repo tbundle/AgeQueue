@@ -28,6 +28,12 @@ As stated above, the complete QueueLife is divided into TimeSlices. The Timeslic
 ## HashList
 A `java.util.List` implementation which mixes the benifit of both `java.util.ArrayList` and `java.util.LinkedList` along with map like searching capability.
 
-The list stores objects in a typical LinkedList fashion which allows easy addition and deletion. Additionaly, the list maintaines pointers at various places through the list which are calculated based on the hascode of the object allowing faster object search through the list.
+The list stores objects in a typical LinkedList fashion which allows easy addition and deletion. Additionally, the list maintaines pointers at various places through the list which are calculated based on the hascode of the object allowing faster object search through the list. In other words, HashList can be viewed as LinkedList of small ArrayLists (logically).
+
+When to use HashList-
+  * You want faster object search (too many `List.contains()` checks); in this case, both ArrayList and LinkedList will scan all the    elements but HashList won't
+  * Your LinkedList is too big and you operate too much with it; you know that locating an index in LinkedList also involves traversing it. Use HashList which does not involve sequential traversal to reach to an index
+  * In fact, you can always replace your LinkedList with HashList as HashList gives superior searching and traversal along with everything that LinkedList offers
+
 
 HashList implementation is NOT thread-safe.
