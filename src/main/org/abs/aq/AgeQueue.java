@@ -1,9 +1,10 @@
 package org.abs.aq;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -32,18 +33,26 @@ import java.util.logging.Logger;
 public class AgeQueue<OBJECT> implements Queue<OBJECT> {
 	private static final Logger LOGGER = Logger.getLogger(AgeQueue.class.getSimpleName());
 
-	private static final Duration DEFAULT_LIFE = Duration.ofSeconds(10);
+	private static final Duration DEFAULT_QUEUE_LIFE = Duration.ofSeconds(10);
 
-	private LinkedList<TimeSlice<OBJECT>> shaft;
-	private Duration life;
+	private List<TimeSlice<OBJECT>> timeSlices;
+	private Duration queueLife;
 	private DeathHandler<OBJECT> deathHandler;
 	private TimeSliceGenerator timeSlicerThread;
 
 	private ReadWriteLock lock;
 
-	public AgeQueue(LinkedList<TimeSlice<OBJECT>> shaft, Duration life, DeathHandler<OBJECT> deathHandler) {
-		this.shaft = shaft;
-		this.life = life;
+	public AgeQueue() {
+		this(DEFAULT_QUEUE_LIFE, null);
+	}
+
+	public AgeQueue(DeathHandler<OBJECT> deathHandler) {
+		this(DEFAULT_QUEUE_LIFE, deathHandler);
+	}
+
+	public AgeQueue(Duration life, DeathHandler<OBJECT> deathHandler) {
+		this.timeSlices = new ArrayList<>();
+		this.queueLife = life;
 		this.deathHandler = deathHandler;
 		this.lock = new ReentrantReadWriteLock();
 
@@ -73,14 +82,14 @@ public class AgeQueue<OBJECT> implements Queue<OBJECT> {
 	 * </p>
 	 */
 	void pushTimeSlice() {
-		this.shaft.add(new TimeSlice<>());
+		this.timeSlices.add(new TimeSlice<>());
 	}
 
 	@Override
 	public int size() {
 		try {
 			this.lock.writeLock().lock();
-			return this.shaft.size() > 0 ? this.shaft.stream().mapToInt(v -> v.size()).sum() : 0;
+			return this.timeSlices.size() > 0 ? this.timeSlices.stream().mapToInt(v -> v.size()).sum() : 0;
 
 		} finally {
 			this.lock.writeLock().unlock();
@@ -92,8 +101,8 @@ public class AgeQueue<OBJECT> implements Queue<OBJECT> {
 		try {
 			this.lock.writeLock().lock();
 
-			if (this.shaft.size() > 0) {
-				for (TimeSlice<OBJECT> ts : this.shaft) {
+			if (this.timeSlices.size() > 0) {
+				for (TimeSlice<OBJECT> ts : this.timeSlices) {
 					if (ts.size() > 0) {
 						return false;
 					}
@@ -109,8 +118,8 @@ public class AgeQueue<OBJECT> implements Queue<OBJECT> {
 
 	@Override
 	public boolean contains(Object o) {
-		for(TimeSlice<OBJECT> ts: this.shaft){
-			
+		for (TimeSlice<OBJECT> ts : this.timeSlices) {
+
 		}
 		return false;
 	}
