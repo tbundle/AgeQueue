@@ -1,8 +1,4 @@
-# smartcollection
-
-Set of java collections which are not offered by JDK out of the box. The collections are unconventional and some of them are live in nature; meaning they engage CPU even when applications are not operating with them.
-
-## AgeQueue
+# Age Queue
 
 A `java.util.Queue` implementation which automatically flushes an object out when the object has spent a predefined life span in the queue. As soon as an object is added to the queue, the aging process starts for the object. Unless the application removes the object from queue, queue automatically drops the object out once the object has spent it's predefined life in queue.
 
@@ -20,20 +16,3 @@ Currently AgeQueue supports a constant life  duration for all the objects (in fu
 
 #### TimeSlice
 As stated above, the complete QueueLife is divided into TimeSlices. The Timeslice is the smallest unit of the time that queue can record and work with. Currently, the TimeSlice can not be smaller than a second.
-
-
-
-
-## HashList
-
-A `java.util.List` implementation which mixes the benifit of both `java.util.ArrayList` and `java.util.LinkedList` along with map like searching capability.
-
-The list stores objects in a typical LinkedList fashion which allows easy addition and deletion. Additionally, the list maintaines pointers at various places through the list which are calculated based on the hascode of the object allowing faster object search through the list. In other words, HashList can be viewed as LinkedList of small ArrayLists (logically).
-
-When to use HashList-
-  * You want faster object search (too many `List.contains()` checks); in this case, both ArrayList and LinkedList will scan all the    elements but HashList won't
-  * Your LinkedList is too big and you operate too much with it; you know that locating an index in LinkedList also involves traversing it. Use HashList which does not involve sequential traversal to reach to an index
-  * In fact, you can always replace your LinkedList with HashList as HashList gives superior searching and traversal along with everything that LinkedList offers
-
-
-HashList implementation is NOT thread-safe.
